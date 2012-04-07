@@ -18,7 +18,7 @@ class Neo4jServer(val neo4jUrl:String) {
   import dispatch._
 
   val Neo4jUrlRE = """^(https?):\/\/([^@]*@)?([^:]*):?(\d*)?$""".r
-  val CredentialsRE = """^([^:]*):?(.+)""".r
+  val CredentialsRE = """^([^:]*):?(.+)@""".r
 
   val h = Http
   val neo4j = neo4jUrl match {
