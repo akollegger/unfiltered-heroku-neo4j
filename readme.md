@@ -37,22 +37,6 @@ Discover the Neo4j REST API
     // query with Cypher
     h((cypher << ("""{"query": "start n=node(0) return n"}""", "application/json")) >>> System.out)
 
-    // fun with Lift-JSON 
-    import dispatch.liftjson.Js._
-    import net.liftweb.json._
-    import net.liftweb.json.JsonAST._
-    import net.liftweb.json.JsonDSL._
-
-    // create json properties as a tuple
-    var props = ("name" -> "Andreas")
-    compact(render(props))
-
-    // use the props to create a node
-    h((node << (compact(render(props)), "application/json")) >>> System.out)
-
-    // or directly
-    h((node << (compact(render("name" -> "Gabriella")), "application/json")) >>> System.out)
-
 Hook it up
 ----------
 
