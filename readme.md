@@ -19,23 +19,30 @@ Discover the Neo4j REST API
     // create an _executor_ for HTTP
     val h = new Http
     
-    // define the base URL for the Neo4j Server, and check it out
-    val neo4j = :/("localhost", 7474)
-    h(neo4j >>> System.out)
+    // generate the base URL for the Neo4j Server
+    def neo4j = :/("localhost", 7474).addHeader("Accept", "application/json")
+
+    // query the base url, using `for` to apply the promise
+    for (json <- h(neo4j OK as.String)) println(json)
     
     // define a reference to the "graph" base URL, and get it
-    val g = neo4j / "db" / "data"
-    h(g >>> System.out)
+    // note the awkward addition of a blank string to force the URL to include '/'
+    def g = neo4j / "db/data/"
+    for (json <- h(g OK as.String)) println(json)
     
     // define Node base URL, create a node with a POST
-    val node = g / "node"
-    h((node POST) >>> System.out)
+    def node = g / "node"
+    h(node << Map() > as.String)
 
     // create another node, with property "foo" set to "bar"
-    h((node << ("{\"foo\" : \"bar\"}", "application/json")) >>> System.out)
+    h(node << Map("foo" -> "bar") > as.String)
+
+    // use node's id to get its properties
+    h(node / "1/properties" OK as.String)
 
     // query with Cypher
-    h((cypher << ("""{"query": "start n=node(0) return n"}""", "application/json")) >>> System.out)
+    def cypher = g / "cypher"
+    h(cypher << Map("query" -> "start n=node(*) return n") OK as.String)
 
 Hook it up
 ----------
